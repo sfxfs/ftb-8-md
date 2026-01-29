@@ -1,0 +1,22 @@
+version: "1.0.0"
+description: "ESP-IDF driver for Futaba 8-MD-06INK VFD (Vacuum Fluorescent Display) module"
+url: "https://github.com/sfxfs/ftb-8-md"
+repository: "https://github.com/sfxfs/ftb-8-md.git"
+documentation: "https://github.com/sfxfs/ftb-8-md#readme"
+issues: "https://github.com/sfxfs/ftb-8-md/issues"
+license: "MIT"
+
+maintainers:
+  - "Xiao <xiaofeng-fu@foxmail.com>"
+
+targets:
+  - esp32
+  - esp32s2
+  - esp32s3
+  - esp32c3
+  - esp32c6
+  - esp32h2
+
+dependencies:
+  idf:
+    version: ">=5.0"
