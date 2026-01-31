@@ -98,7 +98,7 @@ static void display_time_12h(struct tm *timeinfo, bool blink_colon)
 static void display_date(struct tm *timeinfo)
 {
     char date_str[9];
-    /* Format: DD.MM.YY (European) */
+    /* Format: DD.MM.YYYY (European) - 8 digits */
     snprintf(date_str, sizeof(date_str), "%02d%02d%04d",
              timeinfo->tm_mday, timeinfo->tm_mon + 1, 
              timeinfo->tm_year + 1900);
