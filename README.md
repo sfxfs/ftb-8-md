@@ -67,8 +67,8 @@ void app_main(void)
         // Display a string
         ftb8md_show_string(vfd, 0, "HELLO   ");
         
-        // Set brightness (0-255)
-        ftb8md_set_dimming(vfd, 128);
+        // Set brightness (0-240)
+        ftb8md_set_dimming(vfd, 120);
         
         // Turn on decimal point at digit 3
         ftb8md_set_dot(vfd, 3, true);
@@ -124,7 +124,7 @@ Clear all digits and decimal points on the display.
 esp_err_t ftb8md_set_dimming(spi_device_handle_t handle, uint8_t level);
 ```
 
-Set the display brightness level (0-255).
+Set the display brightness level (0-240, where 240 is maximum brightness).
 
 #### `ftb8md_set_dot()`
 
@@ -141,6 +141,14 @@ esp_err_t ftb8md_enter_standby(spi_device_handle_t handle, bool standby);
 ```
 
 Enter or exit standby (low power) mode.
+
+#### `ftb8md_set_display_power()`
+
+```c
+esp_err_t ftb8md_set_display_power(spi_device_handle_t handle, bool on);
+```
+
+Turn the display on or off. Display contents are preserved when off.
 
 ### Custom Characters
 

@@ -15,6 +15,9 @@ static const char *TAG = "FTB8MD";
 /** @brief Number of digits on the display */
 #define FTB8MD_NUM_DIGITS 8
 
+/** @brief Maximum dimming level */
+#define FTB8MD_MAX_DIMMING 240
+
 /** @brief Maximum SPI clock frequency (500 kHz) */
 #define FTB8MD_SPI_CLOCK_HZ (500 * 1000)
 
@@ -67,7 +70,12 @@ spi_device_handle_t ftb8md_device_register(spi_host_device_t host_id, int cs_pin
             .pull_down_en = GPIO_PULLDOWN_DISABLE,
             .intr_type = GPIO_INTR_DISABLE,
         };
-        gpio_config(&io_conf);
+        esp_err_t ret = gpio_config(&io_conf);
+        if (ret != ESP_OK)
+        {
+            ESP_LOGE(TAG, "Failed to configure reset pin: %s", esp_err_to_name(ret));
+            return NULL;
+        }
 
         // Perform hardware reset
         gpio_set_level((gpio_num_t)reset_pin, 0);
@@ -104,7 +112,7 @@ spi_device_handle_t ftb8md_device_register(spi_host_device_t host_id, int cs_pin
     }
 
     // Set maximum brightness
-    ftb8md_set_dimming(handle, 0xff);
+    ftb8md_set_dimming(handle, FTB8MD_MAX_DIMMING);
 
     // Turn on display with full brightness
     cmd.ctrl.prefix = CMD_DISPLAY_ON;
@@ -157,7 +165,7 @@ esp_err_t ftb8md_set_dimming(spi_device_handle_t handle, uint8_t level)
 
     DisplayCommand cmd = {0};
     cmd.ctrl.prefix = CMD_DIMMING;
-    cmd.ctrl.arg = level > 240 ? 240 : level; // Max dimming level is 240
+    cmd.ctrl.arg = level > FTB8MD_MAX_DIMMING ? FTB8MD_MAX_DIMMING : level;
 
     return ftb8md_send_command(handle, cmd.raw, 2);
 }
@@ -171,6 +179,19 @@ esp_err_t ftb8md_enter_standby(spi_device_handle_t handle, bool standby)
 
     DisplayCommand cmd = {0};
     cmd.ctrl.prefix = standby ? CMD_MODE_STANDBY : CMD_MODE_NORMAL;
+
+    return ftb8md_send_command(handle, cmd.raw, 2);
+}
+
+esp_err_t ftb8md_set_display_power(spi_device_handle_t handle, bool on)
+{
+    if (handle == NULL)
+    {
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    DisplayCommand cmd = {0};
+    cmd.ctrl.prefix = on ? CMD_DISPLAY_ON : CMD_DISPLAY_OFF;
 
     return ftb8md_send_command(handle, cmd.raw, 2);
 }

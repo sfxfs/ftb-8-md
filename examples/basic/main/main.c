@@ -68,7 +68,7 @@ void app_main(void)
 
         /* Display "ESP32" with full brightness */
         ESP_LOGI(TAG, "Displaying 'ESP32' at full brightness...");
-        ftb8md_set_dimming(vfd, 255);
+        ftb8md_set_dimming(vfd, 240);
         ftb8md_clear_display(vfd);
         ftb8md_show_string(vfd, 1, "ESP32");
         vTaskDelay(pdMS_TO_TICKS(2000));
@@ -87,13 +87,13 @@ void app_main(void)
         ftb8md_show_string(vfd, 0, "DIMMING ");
 
         /* Fade out */
-        for (int level = 255; level >= 0; level -= 5) {
+        for (int level = 240; level >= 0; level -= 5) {
             ftb8md_set_dimming(vfd, level);
             vTaskDelay(pdMS_TO_TICKS(30));
         }
 
         /* Fade in */
-        for (int level = 0; level <= 255; level += 5) {
+        for (int level = 0; level <= 240; level += 5) {
             ftb8md_set_dimming(vfd, level);
             vTaskDelay(pdMS_TO_TICKS(30));
         }

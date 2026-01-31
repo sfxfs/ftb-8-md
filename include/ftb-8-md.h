@@ -162,7 +162,8 @@ esp_err_t ftb8md_show_string(spi_device_handle_t handle, int digit, const char *
  * the duty cycle of the display grid.
  *
  * @param handle The SPI device handle obtained from ftb8md_device_register().
- * @param level Brightness level (0-255, where 0 is dimmest and 255 is brightest).
+ * @param level Brightness level (0-240, where 0 is dimmest and 240 is brightest).
+ *              Values above 240 will be capped to 240.
  * @return
  *      - ESP_OK: Success
  *      - ESP_ERR_INVALID_ARG: Invalid handle
@@ -184,6 +185,25 @@ esp_err_t ftb8md_set_dimming(spi_device_handle_t handle, uint8_t level);
  *      - ESP_FAIL: SPI communication error
  */
 esp_err_t ftb8md_enter_standby(spi_device_handle_t handle, bool standby);
+
+/**
+ * @brief Turn the display on or off.
+ *
+ * This function controls the display power state. When off, all segments are
+ * turned off but the display contents in memory are preserved. This is different
+ * from standby mode which also reduces overall power consumption.
+ *
+ * @param handle The SPI device handle obtained from ftb8md_device_register().
+ * @param on Set to true to turn on the display, false to turn it off.
+ * @return
+ *      - ESP_OK: Success
+ *      - ESP_ERR_INVALID_ARG: Invalid handle
+ *      - ESP_FAIL: SPI communication error
+ *
+ * @note Use ftb8md_enter_standby() for deeper power saving when display is not needed.
+ * @see ftb8md_enter_standby()
+ */
+esp_err_t ftb8md_set_display_power(spi_device_handle_t handle, bool on);
 
 /**
  * @brief Set or clear the decimal point for a specific digit.
